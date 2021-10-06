@@ -42,3 +42,12 @@ screen = (-2, 2 / ratio, 2, -2 / ratio) # left, top, right,bottom
 light = { 'position': np.array([4, 4, 4]), 'ambient': np.array([1, 1, 1]), 'diffuse': np.array([1, 1, 1]), 'specular': np.array([1, 1, 1]) }
 objects = [ { 'center': np.array([-0.2, 0, -1]), 'radius': 0.9, 'ambient': np.array([0.1, 0.1, 0.1]), 'diffuse': np.array([0.7, 0, 0.7]), 'specular': np.array([1, 1, 1]), 'shininess': 100, 'reflection': 0.5 }]
 image = np.zeros((height, width, 3))
+
+for i, y in enumerate(np.linspace(screen[1], screen[3], height)):
+   for j, x in enumerate(np.linspace(screen[0], screen[2], width)):
+       # screen is on origin
+       pixel = np.array([x, y, 0])
+       origin = camera
+       direction = normalize(pixel - origin)
+       color = np.zeros((3))
+       reflection = 1
