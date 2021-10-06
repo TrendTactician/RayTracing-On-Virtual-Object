@@ -29,3 +29,16 @@ def nearest_intersected_object(objects, ray_origin, ray_direction):
            min_distance = distance
            nearest_object = objects[index]
    return nearest_object, min_distance
+
+
+width = 300
+height = 200
+max_depth = 3
+
+camera = np.array([0, 0, 1])
+ratio = float(width) / height
+screen = (-2, 2 / ratio, 2, -2 / ratio) # left, top, right,bottom
+
+light = { 'position': np.array([4, 4, 4]), 'ambient': np.array([1, 1, 1]), 'diffuse': np.array([1, 1, 1]), 'specular': np.array([1, 1, 1]) }
+objects = [ { 'center': np.array([-0.2, 0, -1]), 'radius': 0.9, 'ambient': np.array([0.1, 0.1, 0.1]), 'diffuse': np.array([0.7, 0, 0.7]), 'specular': np.array([1, 1, 1]), 'shininess': 100, 'reflection': 0.5 }]
+image = np.zeros((height, width, 3))
