@@ -51,3 +51,31 @@ for i, y in enumerate(np.linspace(screen[1], screen[3], height)):
        direction = normalize(pixel - origin)
        color = np.zeros((3))
        reflection = 1
+       for k in range(max_depth):
+           # check for intersections
+           nearest_object, min_distance = nearest_objects(objects, origin, direction)
+           if nearest_object is None:
+               break
+           intersection = origin + min_distance * direction
+           normal_surface = normalize(intersection - nearest_object['center'])
+           shifted_point = intersection + 1e-5 * normal_surface
+           intersection_light = normalize(light['position'] - shifted_point) 
+           min_distance = nearest_objects(objects, shifted_point, intersection_light)
+           intersection_to_light_distance = np.linalg.norm(light['position'] - intersection)
+           illumination = np.zeros((3))
+           # ambiant
+           illumination += nearest_object['ambient'] * light['ambient']
+           # diffuse
+           illumination += nearest_object['diffuse'] * light['diffuse'] * np.dot(intersection_light, normal_surface)
+           # specular
+           intersection_camera = normalize(camera - intersection)
+           H = normalize(intersection_light + intersection_camera)
+           illumination += nearest_object['specular'] * light['specular'] * np.dot(normal_surface,H) ** (nearest_object['shininess'] / 4)
+           # reflection
+           color += reflection * illumination
+           reflection *= nearest_object['reflection']
+           origin = shifted_point
+           direction = reflected(direction, normal_surface)
+       image[i, j] = np.clip(color, 0, 1)
+   print("%d/%d" % (i + 1, height))
+plt.imsave('Ray-tracing-sample.png', image)
